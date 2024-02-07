@@ -15,9 +15,9 @@ import hdc
 if __name__ == '__main__':
 
     #Set Parameters
-    D = 8192
-    Q = 16
-    d = 0.1
+    D = 8192 #Dimensionality
+    Q = 16   #Quantization Levels
+    d = 0.1  #Density
     remove_list = []
     #Import ISOLET Dataset 
     with open('isolet.pkl', 'rb') as f:
@@ -50,6 +50,7 @@ if __name__ == '__main__':
                 cores = multiprocessing.cpu_count()
                 
                 try:
+                    #Read item memory and associative from file if it already exists
                     voice_im = np.array(pd.read_csv(f'im_{encoding_threshold}_{training_threshold}_{trial}.csv',header = None).values.tolist())
                     voice_im = dict(zip(range(26),voice_im))
                     voice_am = np.array(pd.read_csv(f"am_{encoding_threshold}_{training_threshold}_{trial}.csv",header = None).values.tolist())
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
                     non_bin_reg = np.zeros((26,D))
                     
-                    #print('cores used:',cores)
+                    #print('threads used:',cores)
                     #print('Training...')
 
                     # Create the process pool
@@ -154,6 +155,7 @@ if __name__ == '__main__':
         Accuracies.append(accuracy_line)
         Encoded_densities.append(encoded_density_line)
         AM_densities.append(am_density_line)
+    #Save data to csv
     Accuracies.append([int(min(training_range)),int(max(training_range)),trials])
     Encoded_densities.append([int(min(training_range)),int(max(training_range)),trials])
     AM_densities.append([int(min(training_range)),int(max(training_range)),trials])
